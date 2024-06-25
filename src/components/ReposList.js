@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchRepos } from 'path-to-fetchRepos';
 import { Link } from 'react-router-dom';
 import { TextField, List, ListItem, ListItemText, Button, Modal, Box, Typography } from '@mui/material';
+import { fetchRepos } from '../api/fetchRepos';  // Adjust the path as necessary
 
 const ReposList = () => {
   const [repos, setRepos] = useState([]);
@@ -13,11 +13,9 @@ const ReposList = () => {
   const [creatingRepo, setCreatingRepo] = useState(false);
 
   useEffect(() => {
-    const fetchRepos = async () => {
+    const getRepos = async () => {
       try {
-        const response = await fetch('https://api.github.com/users/Estee00/repos');
-        if (!response.ok) throw new Error(response.statusText);
-        const data = await response.json();
+        const data = await fetchRepos();
         setRepos(data);
       } catch (err) {
         setError(err.message);
@@ -25,7 +23,7 @@ const ReposList = () => {
         setLoading(false);
       }
     };
-    fetchRepos();
+    getRepos();
   }, []);
 
   const handleCreateRepo = async () => {
@@ -41,14 +39,13 @@ const ReposList = () => {
       });
       if (!response.ok) throw new Error(response.statusText);
       const data = await response.json();
-      // Optionally, update state or show success message
       console.log('Repository created:', data);
       // Fetch updated list of repositories
-      fetchRepos();
+      const updatedRepos = await fetchRepos();
+      setRepos(updatedRepos);
       handleCloseModal();
     } catch (err) {
       console.error('Error creating repository:', err.message);
-      // Handle error
     } finally {
       setCreatingRepo(false);
     }
