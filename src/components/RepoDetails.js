@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Link, listSubheaderClasses } from '@mui/material';
+import { Typography, Link } from '@mui/material';
 
 const RepoDetails = () => {
   const { repoName } = useParams();
